@@ -7,6 +7,14 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
+  this.route('index', { path: '/' });
+  this.route('login');
+
+  this.route('authenticated', { path: '' }, function() {
+    this.route('feed', { resetNamespace: true }, function() {
+      this.route('index', { path: '/' });
+    });
+  });
 });
 
 export default Router;

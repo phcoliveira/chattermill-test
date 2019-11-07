@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-body">
+    {{#bs-form
+      model=this.changeset
+      onSubmit=(action (perform this.authenticateTask) preventDefault=true)
+    as |form|}}
+      {{form.element
+        controlType="email"
+        label="Username"
+        property="username"
+      }}
+      
+      {{form.element
+        controlType="password"
+        label="Password"
+        property="password"
+      }}
+
+      <div class="row align-items-center">
+        <div class="col-auto">
+          {{#bs-button
+            type="primary"
+            buttonType="submit"
+            disabled=this.loginDisabled
+          }}
+            Log in
+          {{/bs-button}}
+        </div>
+
+        <div class="col">
+          {{#if this.errorMessage}}
+            <p class="text-danger m-0">
+              {{this.errorMessage}}
+            </p>
+          {{/if}}
+        </div>
+      </div>
+    {{/bs-form}}
+    
+  </div>
+</div>
