@@ -32,6 +32,8 @@ export default Component.extend({
     changeset.validate();
   },
 
+  classNames: ['authentication-form'],
+
   loginValidator,
   changeset: null,
   credentials: null,

@@ -3,17 +3,20 @@
     {{#bs-form
       model=this.changeset
       onSubmit=(action (perform this.authenticateTask) preventDefault=true)
+      data-test-form="authentication"
     as |form|}}
       {{form.element
-        controlType="email"
+        controlType="text"
         label="Username"
         property="username"
+        data-test-input="username"
       }}
       
       {{form.element
         controlType="password"
         label="Password"
         property="password"
+        data-test-input="password"
       }}
 
       <div class="row align-items-center">
@@ -22,6 +25,7 @@
             type="primary"
             buttonType="submit"
             disabled=this.loginDisabled
+            data-test-button="submit"
           }}
             Log in
           {{/bs-button}}
@@ -29,7 +33,7 @@
 
         <div class="col">
           {{#if this.errorMessage}}
-            <p class="text-danger m-0">
+            <p class="text-danger m-0" data-test-text="error-message">
               {{this.errorMessage}}
             </p>
           {{/if}}
