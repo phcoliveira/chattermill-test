@@ -38,13 +38,19 @@ export default Component.extend({
   changeset: null,
   credentials: null,
 
+  /**
+   * The period of time used to display an error message from the server.
+   * @public
+   */
+  errorMessageTimeout: 5000,
+
   errorMessage: computed({
     get() {
       return '';
     },
     set(key, value) {
       if (isPresent(value)) {
-        debounce(this, 'set', 'errorMessage', '', 5000);
+        debounce(this, 'set', 'errorMessage', '', this.get('errorMessageTimeout'));
       }
 
       return value;
@@ -62,7 +68,8 @@ export default Component.extend({
       const credentials = this.get('credentials');
       
       yield this.get('changeset').save();
-      yield this.session.authenticate('authenticator:chattermill', credentials);
+      yield this.get('session')
+        .authenticate('authenticator:chattermill', credentials);
     } catch (error) {
       this.set('errorMessage', error);
     }
