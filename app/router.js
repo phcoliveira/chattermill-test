@@ -11,6 +11,7 @@ Router.map(function() {
   this.route('login');
 
   this.route('authenticated', { path: '' }, function() {
+    this.route('index', { path: '/' });
     this.route('logout');
 
     this.route('feed', function() {
