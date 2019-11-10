@@ -3,10 +3,9 @@ import RSVP from 'rsvp';
 import fetch from 'fetch';
 import { isServerErrorResponse, isAbortError } from 'ember-fetch/errors';
 import { inject as service } from '@ember/service';
-import { isEmpty, isPresent } from '@ember/utils';
+import { isEmpty } from '@ember/utils';
 import EmberObject from '@ember/object';
 import { A } from '@ember/array';
-import { underscore } from '@ember/string';
 
 import config from 'chattermill-test/config/environment';
 
@@ -82,14 +81,13 @@ export default Service.extend({
     });
   },
 
-  find(resource, id) {
+  find(/* resource, id */) {
     return Promise.resolve(EmberObject.extend({}).create());
   },
 
   query(path, pagination) {
     return new RSVP.Promise((resolve, reject) => {
-      const params = this._getParamsFromPagination(pagination);
-      const url = this._getURL(path, params);
+      const url = this._getURL(path, pagination);
 
       this.fetch(url)
         .then((response) => {
@@ -97,25 +95,6 @@ export default Service.extend({
         })
         .catch(reject);
     });
-  },
-
-  _getParamsFromPagination(pagination) {
-    const params = {};
-
-    for (const key in pagination) {
-      const value = pagination[key];
-      const _key = underscore(key);
-      
-      if (isEmpty(value)) continue;
-
-      if (_key === 'page') {
-        params['offset'] = (pagination.page - 1) * pagination.limit;
-      } else {
-        params[_key] = value;
-      }
-    }
-
-    return params;
   },
 
   _getURL(path, query) {
