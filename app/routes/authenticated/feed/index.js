@@ -2,10 +2,16 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 
 export default Route.extend({
+  infinity: service(),
   chattermillApi: service(),
 
   async model() {
-    const body = await this.get('chattermillApi').fetch('/api/reviews');
-    return body.data;
+    return this.infinity.model('/api/reviews', {
+      perPage: 20,
+      perPageParam: 'limit',
+      startingPage: 1,
+      themeId: null,
+      store: this.chattermillApi
+    });
   }
 });

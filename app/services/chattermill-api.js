@@ -3,7 +3,10 @@ import RSVP from 'rsvp';
 import fetch from 'fetch';
 import { isServerErrorResponse, isAbortError } from 'ember-fetch/errors';
 import { inject as service } from '@ember/service';
-import { isEmpty } from '@ember/utils';
+import { isEmpty, isPresent } from '@ember/utils';
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
+import { underscore } from '@ember/string';
 
 import config from 'chattermill-test/config/environment';
 
@@ -17,8 +20,10 @@ const NETWORK_REQUEST_FAILED = 'Network request failed, check your connection';
 export default Service.extend({
   session: service(),
 
-  fetch(endpoint, options = { method: 'GET' }) {
+  fetch(url, options = { method: 'GET' }) {
     return new RSVP.Promise((resolve, reject) => {
+      const _url = url instanceof URL ? url.toString() : `${apiHost}${url}`;
+
       let _options = {
         ...options,
       };
@@ -43,7 +48,8 @@ export default Service.extend({
         };
       }
 
-      fetch(`${apiHost}${endpoint}`, _options)
+
+      fetch(_url, _options)
         .then((response) => {
           return response.json()
             .then((body) => {
@@ -74,5 +80,51 @@ export default Service.extend({
           }
         });
     });
-  }
+  },
+
+  find(resource, id) {
+    return Promise.resolve(EmberObject.extend({}).create());
+  },
+
+  query(path, pagination) {
+    return new RSVP.Promise((resolve, reject) => {
+      const params = this._getParamsFromPagination(pagination);
+      const url = this._getURL(path, params);
+
+      this.fetch(url)
+        .then((response) => {
+          resolve(A(response.data));
+        })
+        .catch(reject);
+    });
+  },
+
+  _getParamsFromPagination(pagination) {
+    const params = {};
+
+    for (const key in pagination) {
+      const value = pagination[key];
+      const _key = underscore(key);
+      
+      if (isEmpty(value)) continue;
+
+      if (_key === 'page') {
+        params['offset'] = (pagination.page - 1) * pagination.limit;
+      } else {
+        params[_key] = value;
+      }
+    }
+
+    return params;
+  },
+
+  _getURL(path, query) {
+    const url = new URL(`${apiHost}${path}`);
+
+    for (const key in query) {
+      url.searchParams.append(key, query[key]);
+    }
+
+    return url;
+  },
 });
