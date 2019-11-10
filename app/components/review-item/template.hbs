@@ -1,0 +1,21 @@
+{{#if (has-block)}}
+  {{yield this.review}}
+{{else}}
+  <div class="row">
+    <div class="col">
+      <p>
+        
+      </p>
+    </div>
+
+    <div class="col-auto">
+      <p>
+        {{locale-string review.created_at}}
+      </p>
+
+      <div class="row">
+
+      </div>
+    </div>
+  </div>
+{{/if}}

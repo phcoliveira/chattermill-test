@@ -5,13 +5,9 @@
     </div>
 
     <div class="col-12 col-md-8 col-lg-9">
-      <ul>
-        {{#each model as |review|}}
-          <li>
-            {{review.id}} : {{review.comment}}
-          </li>
-        {{/each}}
-      </ul>
+      {{#review-list reviews=model as |list|}}
+        {{list.item}}
+      {{/review-list}}
 
       {{infinity-loader infinityModel=model}}
     </div>

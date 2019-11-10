@@ -1,0 +1,3 @@
+{{#each this.reviews as |review|}}
+  {{yield (hash item=(component 'review-item' review=review))}}
+{{/each}}

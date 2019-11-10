@@ -81,8 +81,16 @@ export default Service.extend({
     });
   },
 
-  find(/* resource, id */) {
-    return Promise.resolve(EmberObject.extend({}).create());
+  find(path, id) {
+    return new RSVP.Promise((resolve, reject) => {
+      const url = this._getURL(`${path}/${id}`);
+
+      this.fetch(url)
+        .then((response) => {
+          resolve(EmberObject.create(response.data));
+        })
+        .catch(reject);
+    });
   },
 
   query(path, pagination) {
@@ -97,7 +105,7 @@ export default Service.extend({
     });
   },
 
-  _getURL(path, query) {
+  _getURL(path, query = {}) {
     const url = new URL(`${apiHost}${path}`);
 
     for (const key in query) {

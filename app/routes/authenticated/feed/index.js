@@ -13,7 +13,7 @@ export default Route.extend({
       {
         perPage: 20,
         perPageParam: 'limit',
-        startingPage: 1,
+        startingPage: 2,
         themeId: null,
         store: this.chattermillApi,
       },
