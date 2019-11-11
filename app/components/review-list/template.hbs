@@ -1,3 +1,22 @@
 {{#each this.reviews as |review|}}
-  {{yield (hash item=(component 'review-item' review=review))}}
+  {{yield (hash
+    item=(component "review-item"
+      review=review
+      activeThemeId=this._activeThemeId
+    )
+  )}}
+{{else}}
+  <div class="jumbotron">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="display-4">Oops!</h1>
+
+          <hr class="my-4">
+
+          <p class="lead">There are no reviews for this theme, yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 {{/each}}

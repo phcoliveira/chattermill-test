@@ -1,24 +1,32 @@
-{{#bs-navbar type="dark" backgroundColor="primary" as |navbar|}}
-  <div class="navbar-header">
-    {{navbar.toggle}}
-    {{#link-to "index" class="navbar-brand"}}Chattermill{{/link-to}}
+<div class="d-flex flex-column vw-100 vh-100">
+  {{#bs-navbar type="light" class="p-0" as |navbar|}}
+    <div class="navbar-header">
+      {{navbar.toggle}}
+      {{#link-to
+        "authenticated.feed.index"
+        class="navbar-brand px-3 py-0 m-0 d-flex flex-row align-items-center"
+      }}
+        <img src="/assets/images/logo.png" alt="Chattermill's logo" style="display:block;width:64px;">
+        <span>Chattermill</span>
+      {{/link-to}}
+    </div>
+
+    {{#navbar.content}}
+      {{#navbar.nav class="w-100" as |nav|}}
+        {{#nav.item class="flex-grow-1"}}
+          <div id="navbar-wormhole"></div>
+        {{/nav.item}}
+
+        {{#nav.item}}
+          {{#nav.link-to route="authenticated.logout" class="px-3"}}
+            Log out
+          {{/nav.link-to}}
+        {{/nav.item}}
+      {{/navbar.nav}}
+    {{/navbar.content}}
+  {{/bs-navbar}}
+
+  <div class="flex-grow-1">
+    {{outlet}}
   </div>
-
-  {{#navbar.content}}
-    {{#navbar.nav as |nav|}}
-      {{#nav.item}}
-        {{#nav.link-to route="authenticated.feed.index"}}
-          Feed
-        {{/nav.link-to}}
-      {{/nav.item}}
-
-      {{#nav.item}}
-        {{#nav.link-to route="authenticated.logout"}}
-          Log out
-        {{/nav.link-to}}
-      {{/nav.item}}
-    {{/navbar.nav}}
-  {{/navbar.content}}
-{{/bs-navbar}}
-
-{{outlet}}
+</div>

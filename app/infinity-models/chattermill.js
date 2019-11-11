@@ -3,7 +3,7 @@ import { underscore } from '@ember/string';
 import { isEmpty } from '@ember/utils';
 
 export default InfinityModel.extend({
-  canLoadMore: true,
+  // canLoadMore: true,
 
   buildParams() {
     const originalParams = this._super(...arguments);
@@ -22,4 +22,9 @@ export default InfinityModel.extend({
 
     return params;
   },
+
+  afterInfinityModel(resources, model) {
+    const canLoadMore = resources.get('length') >= model.perPage;
+    this.set('canLoadMore', canLoadMore);
+  }
 });

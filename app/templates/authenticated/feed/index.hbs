@@ -1,15 +1,60 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 col-md-4 col-lg-3">
-      Filters
-    </div>
+<div class="position-relative w-100 h-100">
+  <div class="filters">
+    <div class="position-relative w-100 h-100 overflow-auto">
+      {{#bs-accordion as |acc|}}
+        {{#acc.item as |item|}}
+          {{#item.title class="bg-white"}}
+            <p class="lead m-0">
+              Themes
+            </p>
+          {{/item.title}}
 
-    <div class="col-12 col-md-8 col-lg-9">
-      {{#review-list reviews=model as |list|}}
+          {{#item.body}}
+            {{#theme-list
+              themes=this.model.themes
+              onThemeSelected=(action "setTheme")
+              activeThemeId=this.themeId
+            as |list|}}
+              {{list.item}}
+            {{/theme-list}}
+
+            {{infinity-loader
+              infinityModel=this.model.themes
+              eventDebounce=250
+              infinityLoad=(action "loadMore")
+              hideOnInfinity=true
+            }}
+          {{/item.body}}
+        {{/acc.item}}
+
+        {{#acc.item as |item|}}
+          {{#item.title class="bg-white"}}
+            <p class="lead m-0">Another filter</p>
+          {{/item.title}}
+
+          {{#item.body}}
+            <p>To be implemented</p>
+          {{/item.body}}
+        {{/acc.item}}
+      {{/bs-accordion}}
+    </div>
+  </div>
+
+  <div class="reviews">
+    <div class="position-relative w-100 h-100 overflow-auto">
+      {{#review-list
+        reviews=this.model.reviews
+        activeThemeId=this.themeId
+      as |list|}}
         {{list.item}}
       {{/review-list}}
 
-      {{infinity-loader infinityModel=model}}
+      {{infinity-loader
+        infinityModel=this.model.reviews
+        eventDebounce=250
+        infinityLoad=(action "loadMore")
+        hideOnInfinity=true
+      }}
     </div>
   </div>
 </div>

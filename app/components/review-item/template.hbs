@@ -2,19 +2,48 @@
   {{yield this.review}}
 {{else}}
   <div class="row">
+    {{#if this.activeTheme}}
+      <div class="col-auto">
+        <p>
+          {{emoji-icon emoji=(emoji-from-theme this.activeTheme)}}
+        </p>
+      </div>
+    {{/if}}
+
     <div class="col">
-      <p>
-        
-      </p>
-    </div>
-
-    <div class="col-auto">
-      <p>
-        {{locale-string review.created_at}}
-      </p>
-
       <div class="row">
+        <div class="col-xs-12 col-md">
+          <p class="mb-1">
+            {{this.review.comment}}
+          </p>
 
+          <small>{{locale-string this.review.created_at}}</small>
+        </div>
+
+        {{#if this.otherThemes.length}}
+          <div class="col-xs-12 col-md-auto">
+            {{#bs-dropdown as |dd|}}
+              {{#dd.button}}
+                {{concat (if this.activeTheme "Other" "All") " themes"}} 
+                <span class="caret"></span>
+              {{/dd.button}}
+
+              {{#dd.menu as |menu|}}
+                {{#each this.otherThemes as |theme|}}
+                  {{#menu.item}}
+                    {{#menu.link-to (query-params themeId=theme.theme_id)}}
+                      {{emoji-icon emoji=(emoji-from-theme theme)}}
+
+                      <span class="ml-2">
+                        {{theme.name}}
+                      </span>
+                    {{/menu.link-to}}
+                  {{/menu.item}}
+                {{/each}}
+              {{/dd.menu}}
+            {{/bs-dropdown}}
+          </div>
+        {{/if}}
       </div>
     </div>
   </div>

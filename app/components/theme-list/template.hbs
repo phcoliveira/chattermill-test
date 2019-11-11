@@ -1,0 +1,9 @@
+{{#each this.themes as |theme|}}
+  {{yield (hash
+    item=(component "theme-item"
+      theme=theme
+      onClick=(action "themeSelected")
+      active=(eq this._activeThemeId theme.id)
+    )
+  )}}
+{{/each}}

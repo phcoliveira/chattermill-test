@@ -1,2 +1,25 @@
-
 @import "ember-bootstrap/bootstrap";
+
+.accordion {
+  & > .card {
+    border: 0;
+  }
+}
+
+.filters,
+.reviews {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.filters {
+  right: auto;
+  left: 0;
+  width: 320px;
+}
+
+.reviews {
+  right: 0;
+  left: 320px;
+}

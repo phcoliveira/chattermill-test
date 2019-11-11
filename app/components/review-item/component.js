@@ -1,7 +1,10 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { isPresent } from '@ember/utils';
 import { A } from '@ember/array';
+import { task } from 'ember-concurrency';
 import RSVP from 'rsvp';
 
 
@@ -14,7 +17,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    // this._getThemes();
+    this.getThemesTask.perform();
   },
   
   /**
@@ -23,37 +26,63 @@ export default Component.extend({
    */
   review: null,
 
-  themes: computed({
-    get() {
-      return A();
-    },
+  /**
+   * @public
+   * @required
+   */
+  activeThemeId: null,
 
-    set(key, value) {
-      return value;
+  themes: reads('review.themes'),
+
+  /**
+   * Thew review model does not bring the name of each of its themes.
+   * Therefore, each theme is download and stored under this property in order
+   * to make its name available.
+   */
+  loadedThemes: null,
+
+  activeTheme: computed('themes', 'activeThemeId', function() {
+    const themes = this.get('themes');
+    const activeThemeId = this.get('activeThemeId');
+
+    if (isPresent(themes) && isPresent(activeThemeId)) {
+      // NOTE: Each theme has theme_id
+      return themes.find((theme) => theme.theme_id === activeThemeId);
+    } else {
+      return null;
     }
   }),
 
-  // didReceiveAttrs() {
-  //   const oldReview = this.get('review');
+  otherThemes: computed('themes', 'activeThemeId', 'loadedThemes', function() {
+    const themes = this.get('themes');
+    const activeThemeId = this.get('activeThemeId');
+    const loadedThemes = this.get('loadedThemes');
 
-  //   this._super(...arguments);
+    if (isPresent(themes) && isPresent(activeThemeId) && isPresent(loadedThemes)) {
+      // NOTE: Each theme has theme_id
+      const otherThemes = themes.filter((theme) => theme.theme_id !== activeThemeId);
 
-  //   const newReview = this.get('review');
+      return otherThemes.map((otherTheme) => {
+        return {
+          ...otherTheme,
+          // NOTE: Each theme has id 
+          name: loadedThemes.find((loadedTheme) => loadedTheme.id === otherTheme.theme_id).name
+        };
+      });
+    } else {
+      return A();
+    }
+  }),
 
-  //   if (oldReview !== newReview) {
-  //     this._getThemes();
-  //   }
-  // },
+  getThemesTask: task(function * () {
+    const themes = this.get('themes');
+    const chattermillApi = this.get('chattermillApi');
+    const promises = themes.map((theme) => {
+      return chattermillApi.find('/api/themes', theme.theme_id);
+    });
 
-  // _getThemes() {
-  //   const review = this.get('review');
-  //   const chattermillApi = this.get('chattermillApi');
-  //   const promises = review.themes.map((theme) => {
-  //     return chattermillApi.find('/api/themes', theme.theme_id);
-  //   });
+    const loadedThemes = yield RSVP.all(promises);
 
-  //   RSVP.all(promises).then((themes) => {
-  //     this.set('themes', themes);
-  //   });
-  // }
+    this.set('loadedThemes', loadedThemes);
+  }).drop(),
 });
