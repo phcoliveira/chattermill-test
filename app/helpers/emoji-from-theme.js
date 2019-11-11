@@ -1,6 +1,6 @@
 import { helper } from '@ember/component/helper';
 
-const positives = [
+export const positives = [
   ':smiley:',
   ':smile:',
   ':heart_eyes:',
@@ -12,14 +12,14 @@ const positives = [
   ':sunglasses:',
 ];
 
-const neutrals = [
+export const neutrals = [
   ':no_mouth:',
   ':thinking:',
   ':sleeping:',
   ':rolling_eyes:',
 ];
 
-const negatives = [
+export const negatives = [
   ':rage:',
   ':face_with_symbols_over_mouth:',
   ':triumph:',

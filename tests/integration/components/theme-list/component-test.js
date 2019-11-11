@@ -2,25 +2,27 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import { setupMirage } from 'ember-cli-mirage/test-support';
+
+import page from '../../../page-objects/components/theme-list';
 
 module('Integration | Component | theme-list', function(hooks) {
   setupRenderingTest(hooks);
+  setupMirage(hooks);
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+    this.server.loadFixtures();
 
-    await render(hbs`<ThemeList />`);
+    const themes = this.server.schema.themes.all();
 
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
+    this.set('themes', themes.models);
     await render(hbs`
-      <ThemeList>
-        template block text
-      </ThemeList>
+      {{#theme-list themes=themes activeThemeId=1 as |list|}}
+        {{list.item}}
+      {{/theme-list}}
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom(page.self).exists();
+    assert.dom(page.items.self).exists({ count: themes.models.length });
   });
 });

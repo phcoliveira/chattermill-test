@@ -2,16 +2,19 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import faker from 'faker';
 
 module('Integration | Helper | emoji-from-theme', function(hooks) {
   setupRenderingTest(hooks);
 
-  // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+    const sentiment = faker.random.arrayElement([-1, 0, 1]);
 
-    await render(hbs`{{emoji-from-theme inputValue}}`);
+    this.set('theme', { sentiment });
+    await render(hbs`{{emoji-from-theme theme}}`);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    const emoji = this.element.textContent.trim();
+
+    assert.ok(emoji.match(/^:\w+:/));
   });
 });

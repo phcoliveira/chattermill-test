@@ -6,12 +6,13 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Helper | locale-string', function(hooks) {
   setupRenderingTest(hooks);
 
-  // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+    const date = new Date();
 
-    await render(hbs`{{locale-string inputValue}}`);
+    this.set('date', date.toISOString());
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    await render(hbs`{{locale-string date}}`);
+
+    assert.equal(this.element.textContent.trim(), date.toLocaleString());
   });
 });
