@@ -36,7 +36,6 @@ export default Route.extend({
     };
 
     if (isPresent(model)) {
-      // hash.themes = RSVP.resolve(model.themes);
       hash.themes = model.themes;
     } else {
       hash.themes = this.infinity.model(

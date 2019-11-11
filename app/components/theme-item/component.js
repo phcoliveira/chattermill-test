@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { assert } from '@ember/debug';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   tagName: 'button',
@@ -7,8 +8,26 @@ export default Component.extend({
   classNameBindings: ['active'],
   attributeBindings: ['type'],
 
-  active: false,
   type: 'button',
+
+  /**
+   * @public
+   * @required
+   */
+  theme: null,
+
+  /**
+   * @public
+   * @required
+   */
+  activeThemeId: null,
+
+  active: computed('activeThemeId', function() {
+    const theme = this.get('theme');
+    const activeThemeId = this.get('activeThemeId');
+
+    return parseInt(theme.id) === activeThemeId;
+  }),
 
   click() {
     this.send('clicked', this.get('theme'));

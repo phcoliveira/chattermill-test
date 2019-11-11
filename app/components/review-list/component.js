@@ -1,5 +1,4 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
 
 export default Component.extend({
   tagName: 'ul',
@@ -16,8 +15,4 @@ export default Component.extend({
    * @required
    */
   activeThemeId: null,
-
-  _activeThemeId: computed('activeThemeId', function() {
-    return parseInt(this.get('activeThemeId'));
-  })
 });

@@ -13,7 +13,7 @@
             {{#theme-list
               themes=this.model.themes
               onThemeSelected=(action "setTheme")
-              activeThemeId=this.themeId
+              activeThemeId=this._themeId
             as |list|}}
               {{list.item}}
             {{/theme-list}}
@@ -44,7 +44,7 @@
     <div class="position-relative w-100 h-100 overflow-auto">
       {{#review-list
         reviews=this.model.reviews
-        activeThemeId=this.themeId
+        activeThemeId=this._themeId
       as |list|}}
         {{list.item}}
       {{/review-list}}

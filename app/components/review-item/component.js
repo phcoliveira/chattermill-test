@@ -47,7 +47,9 @@ export default Component.extend({
 
     if (isPresent(themes) && isPresent(activeThemeId)) {
       // NOTE: Each theme has theme_id
-      return themes.find((theme) => theme.theme_id === activeThemeId);
+      return themes.find((theme) => {
+        return parseInt(theme.theme_id) === activeThemeId;
+      });
     } else {
       return null;
     }
@@ -60,13 +62,17 @@ export default Component.extend({
 
     if (isPresent(themes) && isPresent(activeThemeId) && isPresent(loadedThemes)) {
       // NOTE: Each theme has theme_id
-      const otherThemes = themes.filter((theme) => theme.theme_id !== activeThemeId);
+      const otherThemes = themes.filter((theme) => {
+        return parseInt(theme.theme_id) !== activeThemeId;
+      });
 
       return otherThemes.map((otherTheme) => {
         return {
           ...otherTheme,
           // NOTE: Each theme has id 
-          name: loadedThemes.find((loadedTheme) => loadedTheme.id === otherTheme.theme_id).name
+          name: loadedThemes.find((loadedTheme) => {
+            return parseInt(loadedTheme.id) === parseInt(otherTheme.theme_id);
+          }).name
         };
       });
     } else {

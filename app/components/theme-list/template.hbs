@@ -3,7 +3,7 @@
     item=(component "theme-item"
       theme=theme
       onClick=(action "themeSelected")
-      active=(eq this._activeThemeId theme.id)
+      activeThemeId=this.activeThemeId
     )
   )}}
 {{/each}}

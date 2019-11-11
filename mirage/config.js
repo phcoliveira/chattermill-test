@@ -1,4 +1,5 @@
 import { Response } from 'ember-cli-mirage';
+import { isPresent } from '@ember/utils';
 import config from 'chattermill-test/config/environment';
 
 const { apiHost: host } = config;
@@ -53,5 +54,38 @@ export default function() {
     } else {
       return new Response(401, {}, schema.apiErrors.new());
     }
+  });
+
+  this.get('/api/reviews', (schema, request) => {
+    const { offset, limit, theme_id } = request.queryParams;
+    let reviews;
+
+    if (isPresent(theme_id)) {
+      reviews = schema.reviews.where((review) => {
+        return review.themes.any((theme) => {
+          return parseInt(theme.theme_id) === parseInt(theme_id);
+        });
+      });
+    } else {
+      reviews = schema.reviews.all();
+    }
+
+    reviews = reviews.slice(offset, limit);
+
+    return new Response(200, {}, { data: reviews.models });
+  });
+
+  this.get('/api/themes', (schema, request) => {
+    const { offset, limit } = request.queryParams;
+    const themes = schema.themes.all().slice(offset, limit);
+
+    return new Response(200, {}, { data: themes.models });
+  });
+
+  this.get('/api/themes/:id', (schema, request) => {
+    const { id } = request.params;
+    const theme = schema.themes.find(id);
+
+    return new Response(200, {}, { data: theme.attrs });
   });
 }
