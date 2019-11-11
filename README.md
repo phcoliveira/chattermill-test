@@ -18,20 +18,31 @@ You will need the following things properly installed on your computer.
 * `cd chattermill-test`
 * `npm install`
 
+## Running / Production (Important)
+
+Unfortunately, there is a bug with the dependency "ember-emoji", which uses a
+set of emojis from [Joypixels](https://www.joypixels.com/). Such bug is only
+observable in the production build.
+
 ## Running / Development
+
+Running in development will use Chattermill's server as back-end.
 
 * `ember serve`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
 ### Running Tests
+
+Tests are run against a mock of Chattermill's server through the usage of Mirage.
+Therefore, they can be run safely without ever reaching the server.
 
 * `ember test`
 * `ember test --server`
+
+### Code Generators
+
+Make use of the many generators for code, try `ember help generate` for more details
 
 ### Linting
 
